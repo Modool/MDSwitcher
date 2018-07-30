@@ -1,14 +1,14 @@
 //
-//  MDColor+Private.h
-//  MDMultipleColor
+//  MDSwitcher+Private.h
+//  MDSwitcher
 //
 //  Created by xulinfeng on 2018/7/30.
 //  Copyright © 2018年 markejave. All rights reserved.
 //
 
-#import "MDColor.h"
+#import "MDSwitcher.h"
 
-@interface MDColor ()
+@interface MDSwitcher ()
 
 @property (nonatomic, weak) id reference;
 @property (nonatomic, copy) NSString *propertyName;

@@ -1,21 +1,21 @@
 //
-//  MDColorAbility.m
-//  MDMultipleColor
+//  MDSwitcherAbility.m
+//  MDSwitcher
 //
 //  Created by xulinfeng on 2018/7/27.
 //  Copyright © 2018年 markejave. All rights reserved.
 //
 
-#import "MDColorAbility.h"
-#import "MDColor+Private.h"
+#import "MDSwitcherAbility.h"
+#import "MDSwitcher+Private.h"
 
-@interface MDColorAbility ()
+@interface MDSwitcherAbility ()
 
-@property (nonatomic, strong) NSMapTable<id, NSMutableArray<MDColor *> *> *colors;
+@property (nonatomic, strong) NSMapTable<id, NSMutableArray<MDSwitcher *> *> *colors;
 
 @end
 
-@implementation MDColorAbility
+@implementation MDSwitcherAbility
 
 #pragma mark - accessor
 
@@ -31,9 +31,9 @@
 
 #pragma mark - private
 
-- (void)_addColor:(MDColor *)color forReference:(id)reference {
+- (void)_addColor:(MDSwitcher *)color forReference:(id)reference {
     @synchronized(self) {
-        NSMutableArray<MDColor *> *colors = [_colors objectForKey:reference] ?: [NSMutableArray<MDColor *> array];
+        NSMutableArray<MDSwitcher *> *colors = [_colors objectForKey:reference] ?: [NSMutableArray<MDSwitcher *> array];
         [colors addObject:color];
         
         [_colors setObject:colors forKey:reference];
@@ -42,10 +42,10 @@
 
 - (void)_synchronizeColors{
     NSEnumerator *enumerator = _colors.objectEnumerator;
-    NSArray<MDColor *> *colors = nil;
+    NSArray<MDSwitcher *> *colors = nil;
 
     while ((colors = enumerator.nextObject)) {
-        for (MDColor *color in colors) {
+        for (MDSwitcher *color in colors) {
             [color _applyColorAtIndex:_index];
         }
     }
@@ -53,7 +53,7 @@
 
 #pragma mark - protected
 
-- (void)addColor:(MDColor *)color forReference:(id)reference {
+- (void)addColor:(MDSwitcher *)color forReference:(id)reference {
     @synchronized(self) {
         [self _addColor:color forReference:reference];
     }
@@ -62,11 +62,11 @@
 #pragma mark - public
 
 + (instancetype)defaultAbility{
-    static MDColorAbility *ability = nil;
+    static MDSwitcherAbility *ability = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         ability = [[self alloc] init];
-        ability.colors = [NSMapTable<id, NSMutableArray<MDColor *> *> weakToStrongObjectsMapTable];
+        ability.colors = [NSMapTable<id, NSMutableArray<MDSwitcher *> *> weakToStrongObjectsMapTable];
     });
     return ability;
 }

@@ -1,6 +1,6 @@
 //
-//  MDMultipleColorTests.m
-//  MDMultipleColorTests
+//  MDSwitcherTests.m
+//  MDSwitcherTests
 //
 //  Created by xulinfeng on 2018/7/27.
 //  Copyright © 2018年 markejave. All rights reserved.
@@ -8,10 +8,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "MDColor.h"
-#import "MDColorAbility.h"
+#import "MDSwitcher.h"
+#import "MDSwitcherAbility.h"
 
-@interface MDMultipleColorTests : XCTestCase
+@interface MDSwitcherTests : XCTestCase
 
 @property (nonatomic, strong) UIColor *whiteColor;
 @property (nonatomic, strong) UIColor *blackColor;
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation MDMultipleColorTests
+@implementation MDSwitcherTests
 
 - (void)setUp {
     [super setUp];
@@ -30,7 +30,7 @@
     self.blackColor = [UIColor blackColor];
     self.redColor = [UIColor redColor];
 
-    self.color = [[MDColor colorWithReference:self propertyName:@"color" color:_whiteColor, _blackColor, _redColor, nil] first];
+    self.color = [[MDSwitcher switcherWithReference:self propertyName:@"color" item:_whiteColor, _blackColor, _redColor, nil] first];
 }
 
 - (void)testDefaultColor {
@@ -38,18 +38,18 @@
 }
 
 - (void)testWhiteColor {
-    MDColorAbility.defaultAbility.index = 0;
+    MDSwitcherAbility.defaultAbility.index = 0;
 
     XCTAssertEqual(self.color, self.whiteColor);
 }
 
 - (void)testBlackColor {
-    MDColorAbility.defaultAbility.index = 1;
+    MDSwitcherAbility.defaultAbility.index = 1;
     XCTAssertEqual(self.color, self.blackColor);
 }
 
 - (void)testRedColor {
-    MDColorAbility.defaultAbility.index = 2;
+    MDSwitcherAbility.defaultAbility.index = 2;
     XCTAssertEqual(self.color, self.redColor);
 }
 
