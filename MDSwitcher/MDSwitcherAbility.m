@@ -11,7 +11,7 @@
 
 @interface MDSwitcherAbility ()
 
-@property (nonatomic, strong) NSMapTable<id, NSMutableArray<MDSwitcher *> *> *colors;
+@property (nonatomic, strong) NSMapTable<id, NSMutableArray<MDSwitcher *> *> *switchers;
 
 @end
 
@@ -31,31 +31,31 @@
 
 #pragma mark - private
 
-- (void)_addColor:(MDSwitcher *)color forReference:(id)reference {
+- (void)_addSwitcher:(MDSwitcher *)switcher forTarget:(id)target {
     @synchronized(self) {
-        NSMutableArray<MDSwitcher *> *colors = [_colors objectForKey:reference] ?: [NSMutableArray<MDSwitcher *> array];
-        [colors addObject:color];
+        NSMutableArray<MDSwitcher *> *switchers = [_switchers objectForKey:target] ?: [NSMutableArray<MDSwitcher *> array];
+        [switchers addObject:switcher];
         
-        [_colors setObject:colors forKey:reference];
+        [_switchers setObject:switchers forKey:target];
     }
 }
 
 - (void)_synchronizeColors{
-    NSEnumerator *enumerator = _colors.objectEnumerator;
-    NSArray<MDSwitcher *> *colors = nil;
+    NSEnumerator *enumerator = _switchers.objectEnumerator;
+    NSArray<MDSwitcher *> *switchers = nil;
 
-    while ((colors = enumerator.nextObject)) {
-        for (MDSwitcher *color in colors) {
-            [color _applyColorAtIndex:_index];
+    while ((switchers = enumerator.nextObject)) {
+        for (MDSwitcher *switcher in switchers) {
+            [switcher _applyAtIndex:_index];
         }
     }
 }
 
 #pragma mark - protected
 
-- (void)addColor:(MDSwitcher *)color forReference:(id)reference {
+- (void)addSwitcher:(MDSwitcher *)switcher forTarget:(id)target {
     @synchronized(self) {
-        [self _addColor:color forReference:reference];
+        [self _addSwitcher:switcher forTarget:target];
     }
 }
 
@@ -66,7 +66,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         ability = [[self alloc] init];
-        ability.colors = [NSMapTable<id, NSMutableArray<MDSwitcher *> *> weakToStrongObjectsMapTable];
+        ability.switchers = [NSMapTable<id, NSMutableArray<MDSwitcher *> *> weakToStrongObjectsMapTable];
     });
     return ability;
 }

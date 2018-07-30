@@ -10,6 +10,6 @@
 
 @interface MDSwitcherAbility ()
 
-- (void)addColor:(MDSwitcher *)color forReference:(id)reference;
+- (void)addSwitcher:(MDSwitcher *)switcher forTarget:(id)target;
 
 @end

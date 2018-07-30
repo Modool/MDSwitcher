@@ -13,8 +13,8 @@
 
 @implementation MDSwitcher
 
-+ (instancetype)switcherWithReference:(id)reference propertyName:(NSString *)propertyName item:(id)item, ... {
-    NSParameterAssert(reference && propertyName.length && item);
++ (instancetype)switcherWithTarget:(id)target property:(NSString *)property item:(id)item, ... {
+    NSParameterAssert(target && property.length && item);
     va_list list;
     va_start(list, item);
 
@@ -26,11 +26,11 @@
     }
     va_end(list);
 
-    return [self switcherWithReference:reference propertyName:propertyName items:items];
+    return [self switcherWithTarget:target property:property items:items];
 }
 
-- (instancetype)initWithReference:(id)reference propertyName:(NSString *)propertyName item:(id)item, ... {
-    NSParameterAssert(reference && propertyName.length && item);
+- (instancetype)initWithTarget:(id)target property:(NSString *)property item:(id)item, ... {
+    NSParameterAssert(target && property.length && item);
     va_list list;
     va_start(list, item);
 
@@ -41,30 +41,30 @@
         item = va_arg(list, id);
     }
     va_end(list);
-    return [self initWithReference:reference propertyName:propertyName items:items];
+    return [self initWithTarget:target property:property items:items];
 }
 
-+ (instancetype)switcherWithReference:(id)reference propertyName:(NSString *)propertyName items:(NSArray *)items {
-    NSParameterAssert(reference && propertyName.length && items.count);
++ (instancetype)switcherWithTarget:(id)target property:(NSString *)property items:(NSArray *)items {
+    NSParameterAssert(target && property.length && items.count);
 
-    return [[self alloc] initWithReference:reference propertyName:propertyName items:items];
+    return [[self alloc] initWithTarget:target property:property items:items];
 }
 
-- (instancetype)initWithReference:(id)reference propertyName:(NSString *)propertyName items:(NSArray *)items {
-    NSParameterAssert(reference && propertyName.length && items.count);
+- (instancetype)initWithTarget:(id)target property:(NSString *)property items:(NSArray *)items {
+    NSParameterAssert(target && property.length && items.count);
 
     if (self = [super init]) {
-        _reference = reference;
-        _propertyName = propertyName.copy;
+        _target = target;
+        _property = property.copy;
         _items = items.copy;
 
-        [MDSwitcherAbility.defaultAbility addColor:self forReference:reference];
+        [MDSwitcherAbility.defaultAbility addSwitcher:self forTarget:target];
     }
     return self;
 }
 
 - (instancetype)init {
-    return [self initWithReference:nil propertyName:nil items:nil];
+    return [self initWithTarget:nil property:nil items:nil];
 }
 
 #pragma mark - accessor
@@ -90,12 +90,12 @@
 
 #pragma mark - private
 
-- (void)_applyColorAtIndex:(NSUInteger)index;{
-    NSParameterAssert(_reference && _propertyName.length && _items.count);
+- (void)_applyAtIndex:(NSUInteger)index;{
+    NSParameterAssert(_target && _property.length && _items.count);
 
     id item = index < _items.count ? _items[index] : _items.firstObject;
 
-    [_reference setValue:item forKey:_propertyName];
+    [_target setValue:item forKey:_property];
 }
 
 @end

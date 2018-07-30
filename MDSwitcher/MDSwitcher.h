@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define MDSwitcherRefer(TARGET, PROPERTY, ITEM, ...)    [MDSwitcher switcherWithTarget:TARGET property:(((void)(NO && ((void)TARGET.PROPERTY, NO)), @#PROPERTY)) item:ITEM, __VA_ARGS__, nil]
+
 @interface MDSwitcher<__covariant ObjectType> : NSObject
 
 @property (nonatomic, copy, readonly) NSArray<ObjectType> *items;
@@ -17,10 +19,10 @@
 @property (nonatomic, strong, readonly) ObjectType third;
 @property (nonatomic, strong, readonly) ObjectType fourth;
 
-+ (instancetype)switcherWithReference:(id)reference propertyName:(NSString *)propertyName item:(ObjectType)item, ...;
-- (instancetype)initWithReference:(id)reference propertyName:(NSString *)propertyName item:(ObjectType)item, ...;
++ (instancetype)switcherWithTarget:(id)target property:(NSString *)property item:(ObjectType)item, ...;
+- (instancetype)initWithTarget:(id)target property:(NSString *)property item:(ObjectType)item, ...;
 
-+ (instancetype)switcherWithReference:(id)reference propertyName:(NSString *)propertyName items:(NSArray<ObjectType> *)items;
-- (instancetype)initWithReference:(id)reference propertyName:(NSString *)propertyName items:(NSArray<ObjectType> *)items NS_DESIGNATED_INITIALIZER;
++ (instancetype)switcherWithTarget:(id)target property:(NSString *)property items:(NSArray<ObjectType> *)items;
+- (instancetype)initWithTarget:(id)target property:(NSString *)property items:(NSArray<ObjectType> *)items NS_DESIGNATED_INITIALIZER;
 
 @end

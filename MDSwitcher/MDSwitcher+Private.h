@@ -10,9 +10,9 @@
 
 @interface MDSwitcher ()
 
-@property (nonatomic, weak) id reference;
-@property (nonatomic, copy) NSString *propertyName;
+@property (nonatomic, weak) id target;
+@property (nonatomic, copy) NSString *property;
 
-- (void)_applyColorAtIndex:(NSUInteger)index;
+- (void)_applyAtIndex:(NSUInteger)index;
 
 @end
