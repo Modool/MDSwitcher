@@ -30,8 +30,7 @@
     self.blackColor = [UIColor blackColor];
     self.redColor = [UIColor redColor];
 
-    self.color = [MDSwitcherRefer(self, color, _whiteColor, _blackColor, _redColor) first];
-//    self.color = [[MDSwitcher switcherWithTarget:self property:@"color" item:_whiteColor, _blackColor, _redColor] first];
+    MDS(self, color) = @[_whiteColor, _blackColor, _redColor];
 }
 
 - (void)testDefaultColor {

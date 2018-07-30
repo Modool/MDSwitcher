@@ -57,8 +57,6 @@
         _target = target;
         _property = property.copy;
         _items = items.copy;
-
-        [MDSwitcherAbility.defaultAbility addSwitcher:self forTarget:target];
     }
     return self;
 }
@@ -96,6 +94,28 @@
     id item = index < _items.count ? _items[index] : _items.firstObject;
 
     [_target setValue:item forKey:_property];
+}
+
+@end
+
+@implementation MDSwitcherAssignmentTrampoline {
+    __weak id _target;
+}
+
+- (id)initWithTarget:(id)target {
+    NSParameterAssert(target);
+
+    if (self = [super init]) {
+        _target = target;
+    }
+    return self;
+}
+
+- (void)setObject:(NSArray *)items forKeyedSubscript:(NSString *)keyPath {
+    MDSwitcher *switcher = [MDSwitcher switcherWithTarget:_target property:keyPath items:items];
+    [_target setValue:items.firstObject forKey:keyPath];
+    
+    [MDSwitcherAbility.defaultAbility addSwitcher:switcher forTarget:_target];
 }
 
 @end

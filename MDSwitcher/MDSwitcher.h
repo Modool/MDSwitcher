@@ -8,21 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-#define MDSwitcherRefer(TARGET, PROPERTY, ITEM, ...)    [MDSwitcher switcherWithTarget:TARGET property:(((void)(NO && ((void)TARGET.PROPERTY, NO)), @#PROPERTY)) item:ITEM, __VA_ARGS__, nil]
+#define MD_SWITCHER_PROPERTY(TARGET, PROPERTY)   (((void)(NO && ((void)TARGET.PROPERTY, NO)), #PROPERTY))
+#define MDS(TARGET, PROPERTY)  [[MDSwitcherAssignmentTrampoline alloc] initWithTarget:(TARGET)][@MD_SWITCHER_PROPERTY(TARGET, PROPERTY)]
 
-@interface MDSwitcher<__covariant ObjectType> : NSObject
+@interface MDSwitcherAssignmentTrampoline : NSObject
 
-@property (nonatomic, copy, readonly) NSArray<ObjectType> *items;
-
-@property (nonatomic, strong, readonly) ObjectType first;
-@property (nonatomic, strong, readonly) ObjectType second;
-@property (nonatomic, strong, readonly) ObjectType third;
-@property (nonatomic, strong, readonly) ObjectType fourth;
-
-+ (instancetype)switcherWithTarget:(id)target property:(NSString *)property item:(ObjectType)item, ...;
-- (instancetype)initWithTarget:(id)target property:(NSString *)property item:(ObjectType)item, ...;
-
-+ (instancetype)switcherWithTarget:(id)target property:(NSString *)property items:(NSArray<ObjectType> *)items;
-- (instancetype)initWithTarget:(id)target property:(NSString *)property items:(NSArray<ObjectType> *)items NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTarget:(id)target;
+- (void)setObject:(NSArray *)items forKeyedSubscript:(NSString *)keyPath;
 
 @end
