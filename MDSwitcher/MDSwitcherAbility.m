@@ -24,7 +24,7 @@
         if (_index != index) {
             _index = index;
 
-            [self _synchronizeColors];
+            [self _synchronizeItems];
         }
     }
 }
@@ -40,7 +40,7 @@
     }
 }
 
-- (void)_synchronizeColors{
+- (void)_synchronizeItems{
     NSEnumerator *enumerator = _switchers.objectEnumerator;
     NSArray<MDSwitcher *> *switchers = nil;
 

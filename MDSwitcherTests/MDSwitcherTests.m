@@ -16,8 +16,10 @@
 @property (nonatomic, strong) UIColor *whiteColor;
 @property (nonatomic, strong) UIColor *blackColor;
 @property (nonatomic, strong) UIColor *redColor;
+@property (nonatomic, strong) UIFont *defaultFont;
 
-@property (nonatomic, strong) UIColor *color;
+@property (nonatomic, strong) UIColor *backgroundColor;
+@property (nonatomic, strong) UIFont *font;
 
 @end
 
@@ -29,33 +31,47 @@
     self.whiteColor = [UIColor whiteColor];
     self.blackColor = [UIColor blackColor];
     self.redColor = [UIColor redColor];
+    self.defaultFont = [UIFont systemFontOfSize:10];
 
-//    MDS(self, color) = @[_whiteColor, _blackColor, _redColor];
-//    MDS(self, color) = MDSTuple(_whiteColor, _blackColor, _redColor);
+//    MDS(self, backgroundColor) = @[_whiteColor, _blackColor, _redColor];
+    MDS(self, font) = self.defaultFont;
+
+//    MDS(self, backgroundColor) = MDSTuple(_whiteColor, _blackColor, _redColor);
+
     __weak __block MDSwitcherTests *weakSelf = self;
-    MDS(self, color) = MDSTuple(^id{
-        return weakSelf.whiteColor;
-    }, _blackColor, _redColor);
+//    MDS(self, backgroundColor) = MDSTuple(^id{
+//        if (1) return weakSelf.whiteColor;
+//        else return [UIColor blackColor];
+//    }, _blackColor, _redColor);
+
+    MDS(self, backgroundColor) = @[^id{
+        if (weakSelf) return weakSelf.whiteColor;
+        else return [UIColor blackColor];
+    }, _blackColor, _redColor];
 }
 
-- (void)testDefaultColor {
-    XCTAssertEqual(self.color, self.whiteColor);
+- (void)testDefault {
+    XCTAssertEqual(self.backgroundColor, self.whiteColor);
+    XCTAssertEqual(self.font, self.defaultFont);
 }
 
 - (void)testWhiteColor {
     MDSwitcherAbility.defaultAbility.index = 0;
 
-    XCTAssertEqual(self.color, self.whiteColor);
+    XCTAssertEqual(self.backgroundColor, self.whiteColor);
+    XCTAssertEqual(self.font, self.defaultFont);
 }
 
 - (void)testBlackColor {
     MDSwitcherAbility.defaultAbility.index = 1;
-    XCTAssertEqual(self.color, self.blackColor);
+
+    XCTAssertEqual(self.backgroundColor, self.blackColor);
 }
 
 - (void)testRedColor {
     MDSwitcherAbility.defaultAbility.index = 2;
-    XCTAssertEqual(self.color, self.redColor);
+
+    XCTAssertEqual(self.backgroundColor, self.redColor);
 }
 
 @end

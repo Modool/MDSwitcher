@@ -117,12 +117,17 @@
 }
 
 - (void)setObject:(id)object forKeyedSubscript:(NSString *)keyPath; {
+    NSParameterAssert(object);
+    
     if (![object isKindOfClass:[MDSwitcher class]]) {
-        if ([object isKindOfClass:[NSArray class]]) {
-            object = [MDSwitcher switcherWithTarget:_target property:keyPath items:object];
-        } else if ([object isKindOfClass:[MDSwitcherTuple class]]) {
-            object = [MDSwitcher switcherWithTarget:_target property:keyPath items:[object objects]];
+        if (![object isKindOfClass:[NSArray class]]) {
+            if ([object isKindOfClass:[MDSwitcherTuple class]]) {
+                object = [object objects];
+            } else {
+                object = @[object];
+            }
         }
+        object = [MDSwitcher switcherWithTarget:_target property:keyPath items:object];
     }
     MDSwitcher *switcher = object;
     NSAssert([switcher isKindOfClass:[MDSwitcher class]], @"Object must be MDSwitcher instance but %@. ", switcher);
