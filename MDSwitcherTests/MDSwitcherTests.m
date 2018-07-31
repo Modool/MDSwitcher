@@ -30,7 +30,12 @@
     self.blackColor = [UIColor blackColor];
     self.redColor = [UIColor redColor];
 
-    MDS(self, color) = @[_whiteColor, _blackColor, _redColor];
+//    MDS(self, color) = @[_whiteColor, _blackColor, _redColor];
+//    MDS(self, color) = MDSTuple(_whiteColor, _blackColor, _redColor);
+    __weak __block MDSwitcherTests *weakSelf = self;
+    MDS(self, color) = MDSTuple(^id{
+        return weakSelf.whiteColor;
+    }, _blackColor, _redColor);
 }
 
 - (void)testDefaultColor {

@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+/// This class to control MDSwitcher ability,
+/// whose selection of items applied by this index.
 @interface MDSwitcherAbility : NSObject
 
+/// Index to apply MDSwitcher items
 @property (nonatomic, assign) NSUInteger index;
 
+/// Default instance
 + (instancetype)defaultAbility;
 
 @end

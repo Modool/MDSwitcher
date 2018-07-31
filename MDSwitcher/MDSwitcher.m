@@ -92,8 +92,13 @@
     NSParameterAssert(_target && _property.length && _items.count);
 
     id item = index < _items.count ? _items[index] : _items.firstObject;
-
-    [_target setValue:item forKey:_property];
+    NSString *className = NSStringFromClass([item class]);
+    
+    if ([className containsString:@"Block"]) {
+        id (^block)(void) = item;
+        item = block();
+    }
+    [_target setValue:item forKeyPath:_property];
 }
 
 @end
@@ -111,11 +116,72 @@
     return self;
 }
 
-- (void)setObject:(NSArray *)items forKeyedSubscript:(NSString *)keyPath {
-    MDSwitcher *switcher = [MDSwitcher switcherWithTarget:_target property:keyPath items:items];
-    [_target setValue:items.firstObject forKey:keyPath];
-    
+- (void)setObject:(id)object forKeyedSubscript:(NSString *)keyPath; {
+    if (![object isKindOfClass:[MDSwitcher class]]) {
+        if ([object isKindOfClass:[NSArray class]]) {
+            object = [MDSwitcher switcherWithTarget:_target property:keyPath items:object];
+        } else if ([object isKindOfClass:[MDSwitcherTuple class]]) {
+            object = [MDSwitcher switcherWithTarget:_target property:keyPath items:[object objects]];
+        }
+    }
+    MDSwitcher *switcher = object;
+    NSAssert([switcher isKindOfClass:[MDSwitcher class]], @"Object must be MDSwitcher instance but %@. ", switcher);
+
+    [switcher _applyAtIndex:0];
     [MDSwitcherAbility.defaultAbility addSwitcher:switcher forTarget:_target];
 }
 
 @end
+
+@implementation MDSwitcherTuple
+
++ (instancetype)tupleWithObject:(id)object {
+    NSParameterAssert(object);
+    return [[self alloc] initWithObject:object];
+}
+
+- (instancetype)initWithObject:(id)object {
+    NSParameterAssert(object);
+    return [self initWithArray:@[object]];
+}
+
++ (instancetype)tupleWithObjects:(id)object, ... {
+    NSParameterAssert(object);
+    va_list list;
+    va_start(list, object);
+
+    NSMutableArray *objects = [NSMutableArray new];
+    while (object) {
+        [objects addObject:object];
+
+        object = va_arg(list, id);
+    }
+    va_end(list);
+    return [[self alloc] initWithArray:objects];
+}
+
+- (instancetype)initWithObjects:(id)object, ... {
+    NSParameterAssert(object);
+    va_list list;
+    va_start(list, object);
+
+    NSMutableArray *objects = [NSMutableArray new];
+    while (object) {
+        [objects addObject:object];
+
+        object = va_arg(list, id);
+    }
+    va_end(list);
+    return [self initWithArray:objects];
+}
+
+- (instancetype)initWithArray:(NSArray *)array {
+    NSParameterAssert(array.count);
+    if (self = [super init]) {
+        _objects = array.copy;
+    }
+    return self;
+}
+
+@end
+
