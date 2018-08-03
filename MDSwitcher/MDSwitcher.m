@@ -132,8 +132,9 @@
     MDSwitcher *switcher = object;
     NSAssert([switcher isKindOfClass:[MDSwitcher class]], @"Object must be MDSwitcher instance but %@. ", switcher);
 
-    [switcher _applyAtIndex:0];
-    [MDSwitcherAbility.defaultAbility addSwitcher:switcher forTarget:_target];
+    MDSwitcherAbility *ability = [MDSwitcherAbility defaultAbility];
+    [switcher _applyAtIndex:ability.index];
+    [ability addSwitcher:switcher forTarget:_target];
 }
 
 @end
