@@ -12,4 +12,7 @@
 
 - (void)addSwitcher:(MDSwitcher *)switcher forTarget:(id)target;
 
+- (void)removeSwitchersByProperty:(NSString *)property forTarget:(id)target;
+- (void)removeSwitchersForTarget:(id)target;
+
 @end

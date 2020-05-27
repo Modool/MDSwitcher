@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MDSwitcherAbility.h"
+
 #define MD_SWITCHER_PROPERTY(TARGET, PROPERTY)   (((void)(NO && ((void)TARGET.PROPERTY, NO)), #PROPERTY))
 #define MDS(TARGET, PROPERTY)  [[MDSwitcherAssignmentTrampoline alloc] initWithTarget:(TARGET)][@MD_SWITCHER_PROPERTY(TARGET, PROPERTY)]
 #define MDSTuple(ITEM, ...)    [MDSwitcherTuple tupleWithObjects:ITEM, __VA_ARGS__, nil]

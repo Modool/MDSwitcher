@@ -48,6 +48,13 @@
         if (weakSelf) return weakSelf.whiteColor;
         else return [UIColor blackColor];
     }, _blackColor, _redColor];
+
+    BOOL cancel = xxxx；
+    MDS(_lineView, backgroundColor) = MDS_THEME_GENERAL(^{
+        return SELECT(cancel, HEXCOLOR(0xE7E7E7), HEXCOLOR(0xFB7299));
+    }, ^{
+        return SELECT(cancel, HEXCOLOR(0x333333), HEXCOLOR(0xBB5B76));
+    });
 }
 
 - (void)testDefault {

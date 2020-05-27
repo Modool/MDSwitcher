@@ -32,12 +32,30 @@
 #pragma mark - private
 
 - (void)_addSwitcher:(MDSwitcher *)switcher forTarget:(id)target {
-    @synchronized(self) {
-        NSMutableArray<MDSwitcher *> *switchers = [_switchers objectForKey:target] ?: [NSMutableArray<MDSwitcher *> array];
-        [switchers addObject:switcher];
-        
-        [_switchers setObject:switchers forKey:target];
+    NSMutableArray<MDSwitcher *> *switchers = [_switchers objectForKey:target] ?: [NSMutableArray<MDSwitcher *> array];
+    if (_unique) {
+        for (MDSwitcher *exsitSwitcher in switchers.copy) {
+            if (![exsitSwitcher.property isEqualToString:switcher.property]) continue;
+
+            [switchers removeObject:exsitSwitcher];
+        }
     }
+    [switchers addObject:switcher];
+    [_switchers setObject:switchers forKey:target];
+}
+
+- (void)_removeSwitchersByProperty:(NSString *)property forTarget:(id)target {
+    NSMutableArray<MDSwitcher *> *switchers = [_switchers objectForKey:target] ?: [NSMutableArray<MDSwitcher *> array];
+    for (MDSwitcher *exsitSwitcher in switchers.copy) {
+        if (![exsitSwitcher.property isEqualToString:property]) continue;
+
+        [switchers removeObject:exsitSwitcher];
+    }
+    [_switchers setObject:switchers forKey:target];
+}
+
+- (void)_removeSwitchersForTarget:(id)target {
+    [_switchers removeObjectForKey:target];
 }
 
 - (void)_synchronizeItems{
@@ -56,6 +74,18 @@
 - (void)addSwitcher:(MDSwitcher *)switcher forTarget:(id)target {
     @synchronized(self) {
         [self _addSwitcher:switcher forTarget:target];
+    }
+}
+
+- (void)removeSwitchersByProperty:(NSString *)property forTarget:(id)target {
+    @synchronized(self) {
+        [self _removeSwitchersByProperty:property forTarget:target];
+    }
+}
+
+- (void)removeSwitchersForTarget:(id)target {
+    @synchronized(self) {
+        [self _removeSwitchersForTarget:target];
     }
 }
 

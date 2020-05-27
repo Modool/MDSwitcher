@@ -15,7 +15,12 @@
 /// Index to apply MDSwitcher items
 @property (nonatomic, assign) NSUInteger index;
 
+// To keep an unique switcher for property.
+@property (nonatomic, assign) BOOL unique;
+
 /// Default instance
 + (instancetype)defaultAbility;
+
+- (instancetype)init NS_UNAVAILABLE;
 
 @end

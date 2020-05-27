@@ -8,7 +8,6 @@
 
 #import "MDSwitcher.h"
 #import "MDSwitcher+Private.h"
-
 #import "MDSwitcherAbility+Private.h"
 
 @implementation MDSwitcher
@@ -88,7 +87,7 @@
 
 #pragma mark - private
 
-- (void)_applyAtIndex:(NSUInteger)index;{
+- (void)_applyAtIndex:(NSUInteger)index {
     NSParameterAssert(_target && _property.length && _items.count);
 
     id item = index < _items.count ? _items[index] : _items.firstObject;
@@ -98,6 +97,11 @@
         id (^block)(void) = item;
         item = block();
     }
+
+    NSError *error = nil;
+    BOOL validate = [_target validateValue:&item forKeyPath:_property error:&error];
+    NSAssert(validate, @"Invalid value %@ for key path: %@ with error: %@", item, _property, error);
+
     [_target setValue:item forKeyPath:_property];
 }
 
@@ -117,8 +121,15 @@
 }
 
 - (void)setObject:(id)object forKeyedSubscript:(NSString *)keyPath; {
-    NSParameterAssert(object);
-    
+    if (object) {
+        [self _addSwitcherWithObject:object forKeyPath:keyPath];
+    } else {
+        [self _removeSwitcherForKeyPath:keyPath];
+    }
+
+}
+
+- (void)_addSwitcherWithObject:(id)object forKeyPath:(NSString *)keyPath {
     if (![object isKindOfClass:[MDSwitcher class]]) {
         if (![object isKindOfClass:[NSArray class]]) {
             if ([object isKindOfClass:[MDSwitcherTuple class]]) {
@@ -134,7 +145,13 @@
 
     MDSwitcherAbility *ability = [MDSwitcherAbility defaultAbility];
     [switcher _applyAtIndex:ability.index];
+
     [ability addSwitcher:switcher forTarget:_target];
+}
+
+- (void)_removeSwitcherForKeyPath:(NSString *)keyPath {
+    MDSwitcherAbility *ability = [MDSwitcherAbility defaultAbility];
+    [ability removeSwitchersForTarget:_target];
 }
 
 @end
